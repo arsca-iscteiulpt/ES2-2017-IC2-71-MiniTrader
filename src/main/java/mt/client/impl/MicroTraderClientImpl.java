@@ -18,7 +18,7 @@ public class MicroTraderClientImpl implements MicroTraderClient {
 		Logger.getLogger(MicroTraderClientImpl.class.getName()).log(Level.INFO, "This is the end...");
 	}
 	
-	//this is a comments
+	//this is a comment
 
 	@Override
 	public void start(ClientComm clientComm) {
