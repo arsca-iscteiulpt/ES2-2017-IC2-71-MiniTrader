@@ -1,6 +1,7 @@
 # ES2-2017-IC2-71-MiniTrader
 
 Users: 
+
  Andre Costa 		  arsca-iscteiulpt 	68529
  
  Andre Barata 		  acfba-iscteiulpt	69204
