@@ -19,6 +19,8 @@ import mt.comm.ServerSideMessage;
 import mt.comm.impl.ServerCommImpl;
 import mt.exception.ServerException;
 import mt.filter.AnalyticsFilter;
+import mt.xml.Region;
+import mt.xml.XMLWritter;
 
 /**
  * MicroTraderServer implementation. This class should be responsible
@@ -76,6 +78,8 @@ public class MicroServer implements MicroTraderServer {
 		LOGGER.log(Level.INFO, "Starting Server...");
 
 		this.serverComm = serverComm;
+		
+		XMLWritter writter = new XMLWritter(Region.EU);
 
 		ServerSideMessage msg = null;
 		while ((msg = serverComm.getNextMessage()) != null) {
@@ -103,6 +107,7 @@ public class MicroServer implements MicroTraderServer {
 						if(msg.getOrder().getServerOrderID() == EMPTY){
 							msg.getOrder().setServerOrderID(id++);
 						}
+						writter.addOrder(msg.getOrder());
 						notifyAllClients(msg.getOrder());
 						processNewOrder(msg);
 					} catch (ServerException e) {
