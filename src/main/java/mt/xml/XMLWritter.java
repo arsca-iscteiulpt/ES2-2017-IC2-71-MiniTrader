@@ -20,7 +20,7 @@ public class XMLWritter {
 	private Document doc;
 	private Element eRegion;
 	private Region region;
-	private String filePath = "file.xml";
+	private String filePath;
 
 	public XMLWritter(Region region) {
 
