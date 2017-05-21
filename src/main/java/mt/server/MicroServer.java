@@ -1,5 +1,6 @@
 package mt.server;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,12 +14,26 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.io.File;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import mt.Order;
 import mt.comm.ServerComm;
 import mt.comm.ServerSideMessage;
 import mt.comm.impl.ServerCommImpl;
 import mt.exception.ServerException;
 import mt.filter.AnalyticsFilter;
+import mt.xml.Region;
+import mt.xml.XMLWritter;
 
 /**
  * MicroTraderServer implementation. This class should be responsible
@@ -27,12 +42,13 @@ import mt.filter.AnalyticsFilter;
  * @author Group 78
  *
  */
-public class MicroServer implements MicroTraderServer {
+public class MicroServer implements MicroTraderServer{
 	
 	public static void main(String[] args) {
 		ServerComm serverComm = new AnalyticsFilter(new ServerCommImpl());
 		MicroTraderServer server = new MicroServer();
 		server.start(serverComm);
+				
 	}
 
 	public static final Logger LOGGER = Logger.getLogger(MicroServer.class.getName());
@@ -73,6 +89,8 @@ public class MicroServer implements MicroTraderServer {
 	public void start(ServerComm serverComm) {
 		serverComm.start();
 		
+		XMLWritter writter = new XMLWritter(Region.EU);
+		
 		LOGGER.log(Level.INFO, "Starting Server...");
 
 		this.serverComm = serverComm;
@@ -103,6 +121,7 @@ public class MicroServer implements MicroTraderServer {
 						if(msg.getOrder().getServerOrderID() == EMPTY){
 							msg.getOrder().setServerOrderID(id++);
 						}
+						writter.addOrder(msg.getOrder());
 						notifyAllClients(msg.getOrder());
 						processNewOrder(msg);
 					} catch (ServerException e) {
