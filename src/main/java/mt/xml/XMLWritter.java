@@ -19,7 +19,7 @@ public class XMLWritter {
 	private DocumentBuilder dBuilder;
 	private Document doc;
 	private Element eRegion;
-	private String filePath = "file.xml";
+	private String filePath;
 	private Region region;
 
 	public XMLWritter(Region region) {
@@ -27,6 +27,7 @@ public class XMLWritter {
 		try {
 
 			openFile(region);
+			filePath =  "xml_file" + region.toString();
 
 		} catch (Exception e) {
 			e.printStackTrace();
