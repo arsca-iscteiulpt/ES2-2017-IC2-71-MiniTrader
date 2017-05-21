@@ -10,7 +10,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
 import mt.Order;
 
 public class XMLWritter {
@@ -20,18 +19,32 @@ public class XMLWritter {
 	private Document doc;
 	private Element eRegion;
 	private Region region;
-	private String filePath = "file.xml";
+	private String filePath;
+	
+	/**
+     * Constructor, calls openFile and defines filePath to xml file depending on the current zone.
+     * @param region
+     */
 
 	public XMLWritter(Region region) {
 
 		try {
-
+			
+			filePath =  "xml_file_" + region.toString() + ".xml";
 			openFile(region);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	 /**
+     * The order parameters for the respective zone are added to xml file.
+     * If region is AS then all parameters are included even the nickname who produced the order.
+     * If region is US then all parameters are included less the nickname.
+     * If region is EU then no one parameter is added.
+     * @param order
+     */
 
 	public void addOrder(Order order) {
 
@@ -87,6 +100,12 @@ public class XMLWritter {
 		}
 	}
 
+	/**
+     * Create file if doesn't exist either create new one to the follow filePath defined as attribute.
+     * Append parameter region to xml file and field id who receives a region.
+     * @param region
+     */
+	
 	public void openFile(Region region) {
 		try {
 
