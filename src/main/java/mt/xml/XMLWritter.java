@@ -31,7 +31,7 @@ public class XMLWritter {
 
 		try {
 
-			filePath =  "xml_file_" + region.toString() + ".xml";
+			filePath = "xml_file_" + region.toString() + ".xml";
 			openFile(region);
 
 		} catch (Exception e) {
