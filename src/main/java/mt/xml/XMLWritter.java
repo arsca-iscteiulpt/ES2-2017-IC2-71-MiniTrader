@@ -21,12 +21,17 @@ public class XMLWritter {
 	private Element eRegion;
 	private String filePath;
 	private Region region;
+	
+	/**
+     * Constructor, calls openFile and defines filePath to xml file depending on the current zone.
+     * @param region
+     */
 
 	public XMLWritter(Region region) {
 
 		try {
 
-			filePath =  "xml_file" + region.toString();
+			filePath =  "xml_file_" + region.toString() + ".xml";
 			openFile(region);
 
 		} catch (Exception e) {
@@ -34,6 +39,14 @@ public class XMLWritter {
 		}
 	}
 
+	/**
+     * The order parameters for the respective zone are added to xml file.
+     * If region is AS then all parameters are included even the nickname who produced the order.
+     * If region is US then all parameters are included less the nickname.
+     * If region is EU then no one parameter is added.
+     * @param order
+     */
+	
 	public void addOrder(Order order) {
 
 		try {
@@ -87,6 +100,12 @@ public class XMLWritter {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+     * Create file if doesn't exist either create new one to the follow filePath defined as attribute.
+     * Append parameter region to xml file and field id who receives a region.
+     * @param region
+     */
 
 	public void openFile(Region region) {
 		try {
