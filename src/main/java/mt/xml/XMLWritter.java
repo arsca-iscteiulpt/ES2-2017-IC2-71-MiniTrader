@@ -19,8 +19,8 @@ public class XMLWritter {
 	private DocumentBuilder dBuilder;
 	private Document doc;
 	private Element eRegion;
-	private Region region;
 	private String filePath = "file.xml";
+	private Region region;
 
 	public XMLWritter(Region region) {
 
