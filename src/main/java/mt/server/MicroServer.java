@@ -63,7 +63,9 @@ public class MicroServer implements MicroTraderServer {
 	public static final int EMPTY = 0;
 
 	/** Minimum number of units in a order */
-	private static final int MIN_NUMBEROFUNITS = 0;
+	private static final int MIN_NUMBEROFUNITS = 10;
+
+	private static final int MAX_UNFULFILLED_SELLORDERS_PER_SELLER = 5;
 
 	/**
 	 * Constructor
@@ -276,16 +278,24 @@ public class MicroServer implements MicroTraderServer {
 	 */
 	private void processSell(Order sellOrder) {
 		LOGGER.log(Level.INFO, "Processing sell order...");
-
-		for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
-			for (Order o : entry.getValue()) {
-				if (o.isBuyOrder() && o.getStock().equals(sellOrder.getStock())
-						&& o.getPricePerUnit() >= sellOrder.getPricePerUnit()) {
-					doTransaction(o, sellOrder);
+		if (isSellOrderValid(sellOrder)) {
+			for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
+				for (Order o : entry.getValue()) {
+					if (o.isBuyOrder() && o.getStock().equals(sellOrder.getStock())
+							&& o.getPricePerUnit() >= sellOrder.getPricePerUnit()) {
+						doTransaction(o, sellOrder);
+					}
 				}
 			}
+		} else {
+			LOGGER.log(Level.WARNING,
+					"Order :" + sellOrder + " was discarded!"
+							+ "The Maximum of Unfullfiled Orders was reached by client" + sellOrder.getNickname()
+							+ "; A Seller can't have more than: " + MAX_UNFULFILLED_SELLORDERS_PER_SELLER
+							+ " Unfulfilled Orders!");
+			sellOrder.setNumberOfUnits(0);
+			updatedOrders.add(sellOrder);
 		}
-
 	}
 
 	/**
@@ -396,5 +406,32 @@ public class MicroServer implements MicroTraderServer {
 					+ ". Was discarded due to number of units being lower than: " + MIN_NUMBEROFUNITS);
 		}
 		return result;
+	}
+
+	/**
+	 * Get Number of Unfulfilled Sell Orders
+	 */
+
+	private int getSellerUnfulfiledOrders(String nickname) {
+		int numberOfUnfulfilledOrders = 0;
+		for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
+			Iterator<Order> it = entry.getValue().iterator();
+			while (it.hasNext()) {
+				Order o = it.next();
+				if (o.isSellOrder() && o.getNickname().equals(nickname)) {
+					numberOfUnfulfilledOrders++;
+				}
+			}
+		}
+		return numberOfUnfulfilledOrders;
+	}
+
+	/**
+	 * Auxiliary function to verify if the Sell order can become effective
+	 */
+
+	private boolean isSellOrderValid(Order o) {
+
+		return (getSellerUnfulfiledOrders(o.getNickname()) <= MAX_UNFULFILLED_SELLORDERS_PER_SELLER);
 	}
 }
