@@ -296,7 +296,8 @@ public class MicroServer implements MicroTraderServer {
 			for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
 				for (Order o : entry.getValue()) {
 					if (o.isBuyOrder() && o.getStock().equals(sellOrder.getStock())
-							&& o.getPricePerUnit() >= sellOrder.getPricePerUnit()) {
+							&& o.getPricePerUnit() >= sellOrder.getPricePerUnit()
+							&& (!ordersFromSameClient(sellOrder, o))) {
 						doTransaction(o, sellOrder);
 					}
 				}
@@ -326,7 +327,7 @@ public class MicroServer implements MicroTraderServer {
 		for (Entry<String, Set<Order>> entry : orderMap.entrySet()) {
 			for (Order o : entry.getValue()) {
 				if (o.isSellOrder() && buyOrder.getStock().equals(o.getStock())
-						&& o.getPricePerUnit() <= buyOrder.getPricePerUnit()) {
+						&& o.getPricePerUnit() <= buyOrder.getPricePerUnit() && (!ordersFromSameClient(o, buyOrder))) {
 					doTransaction(buyOrder, o);
 				}
 			}
@@ -448,6 +449,14 @@ public class MicroServer implements MicroTraderServer {
 	private boolean isSellOrderValid(Order o) {
 
 		return (getSellerUnfulfiledOrders(o.getNickname()) <= MAX_UNFULFILLED_SELLORDERS_PER_SELLER);
+	}
+
+	/**
+	 * Auxiliary function to check if orders are from same client
+	 */
+
+	private boolean ordersFromSameClient(Order sellOrder, Order buyOrder) {
+		return (sellOrder.getNickname().equals(buyOrder.getNickname()));
 	}
 
 }
