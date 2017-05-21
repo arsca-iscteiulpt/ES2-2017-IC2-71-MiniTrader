@@ -2,6 +2,6 @@ package mt.xml;
 
 public enum Region {
 	
-	US, AS, EU
+	EU, US, AS
 
 }
