@@ -20,13 +20,14 @@ public class XMLWritter {
 	private Document doc;
 	private Element eRegion;
 	private Region region;
-	private String filePath = "file.xml";
+	private String filePath;
 
 	public XMLWritter(Region region) {
 
 		try {
 
 			openFile(region);
+			filePath =  "xml_file_" + region.toString() + ".xml";
 
 		} catch (Exception e) {
 			e.printStackTrace();
