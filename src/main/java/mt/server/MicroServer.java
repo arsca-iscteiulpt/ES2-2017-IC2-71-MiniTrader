@@ -84,7 +84,7 @@ public class MicroServer implements MicroTraderServer {
 
 		this.serverComm = serverComm;
 
-		XMLWritter writter = new XMLWritter(Region.EU);
+		XMLWritter writter = new XMLWritter(Region.US);
 
 		ServerSideMessage msg = null;
 		while ((msg = serverComm.getNextMessage()) != null) {
