@@ -109,7 +109,6 @@ public class MicroServer implements MicroTraderServer {
 					verifyUserConnected(msg);
 					if (msg.getOrder().getServerOrderID() == EMPTY && validateOrdersNumberOfUnits(msg.getOrder())) {
 						msg.getOrder().setServerOrderID(id++);
-
 						writter.addOrder(msg.getOrder());
 						notifyAllClients(msg.getOrder());
 						processNewOrder(msg);
