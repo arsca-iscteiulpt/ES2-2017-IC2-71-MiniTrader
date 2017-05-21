@@ -62,7 +62,7 @@ public class MicroServer implements MicroTraderServer {
 	/** The value is {@value #EMPTY} */
 	public static final int EMPTY = 0;
 
-	/** Minimum number of units in a order*/
+	/** Minimum number of units in a order */
 	private static final int MIN_NUMBEROFUNITS = 10;
 
 	/**
