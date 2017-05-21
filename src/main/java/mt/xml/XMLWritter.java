@@ -25,7 +25,7 @@ public class XMLWritter {
 	public XMLWritter(Region region) {
 
 		try {
-			
+
 			openFile(region);
 
 		} catch (Exception e) {
@@ -34,13 +34,13 @@ public class XMLWritter {
 	}
 
 	public void addOrder(Order order) {
-		
+
 		try {
-			
+
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			Document doc = docBuilder.parse(filePath);
-			
+
 			Node firstElement = doc.getElementsByTagName("region").item(0);
 
 			Element eOrder = doc.createElement("order");
@@ -59,29 +59,29 @@ public class XMLWritter {
 			Element isBuyOrder = doc.createElement("isBuyOrder");
 			isBuyOrder.appendChild(doc.createTextNode(String.valueOf(order.isBuyOrder())));
 
+			if (region != Region.EU) {
+
+				eOrder.appendChild(stock);
+				eOrder.appendChild(numberOfUnits);
+				eOrder.appendChild(pricePerUnit);
+				eOrder.appendChild(isBuyOrder);
+
+			}
+
 			if (region == Region.AS) {
 
 				Element nickName = doc.createElement("nickName");
 				nickName.appendChild(doc.createTextNode(order.getNickname()));
 
 				eOrder.appendChild(nickName);
-
-			} else {
-
-				eOrder.appendChild(stock);
-				eOrder.appendChild(numberOfUnits);
-				eOrder.appendChild(pricePerUnit);
-				eOrder.appendChild(isBuyOrder);
 			}
-			
+
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(filePath));
 			transformer.transform(source, result);
 
-
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,21 +93,20 @@ public class XMLWritter {
 			this.region = region;
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.newDocument();
-			
+
 			eRegion = doc.createElement("region");
 			eRegion.setAttribute("id", region.toString());
 			doc.appendChild(eRegion);
-			
+
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(filePath));
 
-			//Output to console for testing
+			// Output to console for testing
 			StreamResult sResult = new StreamResult(System.out);
 
 			transformer.transform(source, result);
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
