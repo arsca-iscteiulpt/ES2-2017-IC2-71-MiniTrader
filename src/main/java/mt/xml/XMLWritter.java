@@ -26,8 +26,8 @@ public class XMLWritter {
 
 		try {
 
-			openFile(region);
 			filePath =  "xml_file" + region.toString();
+			openFile(region);
 
 		} catch (Exception e) {
 			e.printStackTrace();
