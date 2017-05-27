@@ -1,5 +1,6 @@
 package mt.server;
 
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +20,8 @@ import mt.comm.ServerSideMessage;
 import mt.comm.impl.ServerCommImpl;
 import mt.exception.ServerException;
 import mt.filter.AnalyticsFilter;
+import mt.xml.Region;
+import mt.xml.XMLWritter;
 
 /**
  * MicroTraderServer implementation. This class should be responsible
@@ -72,7 +75,7 @@ public class MicroServer implements MicroTraderServer {
 	@Override
 	public void start(ServerComm serverComm) {
 		serverComm.start();
-		
+		XMLWritter writter = new XMLWritter(Region.US); // As a mean of running the JUNIT test, this region was set to US
 		LOGGER.log(Level.INFO, "Starting Server...");
 
 		this.serverComm = serverComm;
@@ -105,6 +108,7 @@ public class MicroServer implements MicroTraderServer {
 						}
 						notifyAllClients(msg.getOrder());
 						processNewOrder(msg);
+						writter.addOrder(msg.getOrder());
 					} catch (ServerException e) {
 						serverComm.sendError(msg.getSenderNickname(), e.getMessage());
 					}
